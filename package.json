@@ -1,0 +1,35 @@
+{
+  "name": "json-to-ts",
+  "version": "1.0.0",
+  "description": "a package that converts json data to typescript interfaces",
+  "main": "build/src/index.js",
+  "scripts": {
+    "build": "rm -rf ./build && tsc",
+    "start:prod": "npm run build && node build/index.js",
+    "start": "ts-node ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EgbedokunOlayinka/json-to-ts.git"
+  },
+  "keywords": [
+    "json",
+    "ts",
+    "json-to-ts"
+  ],
+  "author": "Egbedokun Olayinka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EgbedokunOlayinka/json-to-ts/issues"
+  },
+  "homepage": "https://github.com/EgbedokunOlayinka/json-to-ts#readme",
+  "dependencies": {
+    "inquirer": "^9.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
+  }
+}
