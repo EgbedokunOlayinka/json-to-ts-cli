@@ -2,7 +2,7 @@
 
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { readFile, writeFile, access, stat } from "fs/promises";
+import { readFile, writeFile, access, stat, appendFile } from "fs/promises";
 import { constants } from "fs";
 import JsonToTS from "json-to-ts";
 import { extname } from "path";
@@ -15,8 +15,14 @@ enum SOURCE_ENUM {
   PASTE = "Paste it here",
 }
 
+enum FILE_ENUM {
+  NEW = "New file",
+  EXISTING = "Existing file",
+}
+
 const stripSlash = (value: string) => (value.startsWith("/") ? value.replace("/", "") : value);
-const isJSONFile = (filePath: string) => extname(filePath).toLowerCase() === ".json";
+const isFileExtensionCorrect = (filePath: string, fileExt: string) =>
+  extname(filePath).toLowerCase() === `.${fileExt}`;
 
 function validateString(value: string) {
   if (typeof value === "number") value = `${value}`;
@@ -26,14 +32,15 @@ function validateString(value: string) {
   return true;
 }
 
-async function validateFilePath(filePath: string) {
+async function validateFilePath(filePath: string, fileExt: string) {
   try {
     filePath = stripSlash(filePath);
-    if (!isJSONFile(filePath)) return "Please enter a valid JSON file path";
+    if (!isFileExtensionCorrect(filePath, fileExt))
+      return `Please enter a valid ${fileExt} file path`;
     await access(filePath, constants.F_OK);
     return true;
   } catch (error) {
-    return "Please enter a valid JSON file path";
+    return `Please enter a valid ${fileExt} file path`;
   }
 }
 
@@ -75,7 +82,7 @@ async function getJsonFromFileSource() {
     name: "json_file_source",
     type: "input",
     message: "Please input the path to your JSON file:",
-    validate: async (val) => await validateFilePath(val),
+    validate: async (val) => await validateFilePath(val, "json"),
   });
 
   const fileSrc = `${process.cwd()}/${answers.json_file_source}`;
@@ -107,16 +114,42 @@ function parseJsonToTs(jsonContent: string) {
 }
 
 async function printTsToFilePath(interfaces: string[]) {
+  const answers = await inquirer.prompt({
+    name: "json_source",
+    type: "list",
+    message: "Do you want to print the result to a new file or an existing file?",
+    choices: [FILE_ENUM.NEW, FILE_ENUM.EXISTING],
+  });
+
+  if (answers.json_source === FILE_ENUM.NEW) {
+    return printTsToNewFile(interfaces);
+  }
+  if (answers.json_source === FILE_ENUM.EXISTING) {
+    return printTsToExistingFile(interfaces);
+  }
+}
+
+async function printTsToNewFile(interfaces: string[]) {
   const chosenPath = await inquirer.prompt({
     name: "json_path",
     type: "input",
     message:
-      "Please input the path to where you want the TS file to be pasted (leave empty if you want it in the project root):",
+      "Please input the path to where you want the TS file to be created (leave empty if you want it in the project root):",
     validate: async (val) => await validateFolderPath(val),
   });
 
   await writeFile(`${process.cwd()}/${chosenPath.json_path}/types.ts`, interfaces.join("\n"));
-  // await writeFile(`${process.cwd()}/src/type.ts`, interfaces.join("\n"));
+}
+
+async function printTsToExistingFile(interfaces: string[]) {
+  const chosenPath = await inquirer.prompt({
+    name: "json_path",
+    type: "input",
+    message: "Please input the path to the file where you want the result to be printed",
+    validate: async (val) => await validateFilePath(val, "ts"),
+  });
+
+  await appendFile(`${process.cwd()}/${chosenPath.json_path}`, `\n${interfaces.join("\n")}`);
 }
 
 console.clear();
