@@ -12,7 +12,7 @@
   "bin": "./build/src/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EgbedokunOlayinka/json-to-ts.git"
+    "url": "git+https://github.com/EgbedokunOlayinka/json-to-ts-cli.git"
   },
   "keywords": [
     "json",
