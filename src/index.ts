@@ -2,9 +2,10 @@
 
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { readFile, writeFile, access } from "fs/promises";
+import { readFile, writeFile, access, stat } from "fs/promises";
 import { constants } from "fs";
 import JsonToTS from "json-to-ts";
+import { extname } from "path";
 
 const log = console.log;
 const sleep = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -12,6 +13,13 @@ const sleep = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
 enum SOURCE_ENUM {
   FILE = "In a file",
   PASTE = "Paste it here",
+}
+
+const stripSlash = (value: string) => (value.startsWith("/") ? value.replace("/", "") : value);
+
+function isJSONFile(filePath) {
+  const ext = extname(filePath).toLowerCase();
+  return ext === ".json";
 }
 
 function validateString(value: string) {
@@ -23,16 +31,24 @@ function validateString(value: string) {
 }
 
 async function validateFilePath(filePath: string) {
-  // =========TODO=======
-  // ALSO CHECK IF FILE IS A JSON FILE
-  // CHECK IF INPUT IS A DIRECTORY AND NOTE A FILE
-  if (filePath.trim() === "") return true;
   try {
-    filePath = filePath.startsWith("/") ? filePath.replace("/", "") : filePath;
+    filePath = stripSlash(filePath);
+    if (!isJSONFile(filePath)) return "Please enter a valid JSON file path";
     await access(filePath, constants.F_OK);
     return true;
   } catch (error) {
-    return "Please enter a valid file path";
+    return "Please enter a valid JSON file path";
+  }
+}
+
+async function validateFolderPath(folderPath: string) {
+  if (folderPath.trim() === "") return true;
+  try {
+    folderPath = stripSlash(folderPath);
+    const stats = await stat(folderPath);
+    return stats.isDirectory();
+  } catch (error) {
+    return "Please enter a valid folder path";
   }
 }
 
@@ -100,7 +116,7 @@ async function printTsToFilePath(interfaces: string[]) {
     type: "input",
     message:
       "Please input the path to where you want the TS file to be pasted (leave empty if you want it in the project root):",
-    validate: async (val) => await validateFilePath(val),
+    validate: async (val) => await validateFolderPath(val),
   });
 
   await writeFile(`${process.cwd()}/${chosenPath.json_path}/types.ts`, interfaces.join("\n"));
