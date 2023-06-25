@@ -1,5 +1,5 @@
 {
-  "name": "json-to-ts",
+  "name": "json-to-ts-cli",
   "version": "1.0.0",
   "description": "a package that converts json data to typescript interfaces",
   "main": "build/src/index.js",
@@ -9,6 +9,7 @@
     "start:prod": "npm run build && node build/index.js",
     "start": "ts-node --esm ./src/index.ts"
   },
+  "bin": "./build/src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EgbedokunOlayinka/json-to-ts.git"
