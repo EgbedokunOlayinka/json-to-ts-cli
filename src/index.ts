@@ -84,25 +84,23 @@ async function getJsonFromFileSource() {
     message: "Please input the path to your JSON file:",
     validate: async (val) => await validateFilePath(val, "json"),
   });
-
   const fileSrc = `${process.cwd()}/${answers.json_file_source}`;
   const fileContent = await readFile(fileSrc, "utf-8");
   const parsedFileContent = JSON.parse(fileContent);
   const interfaces = parseJsonToTs(parsedFileContent);
-
   await printTsToFilePath(interfaces);
 }
 
 async function getJsonFromConsolePaste() {
   const answers = await inquirer.prompt({
     name: "json_console_paste",
-    type: "input",
+    type: "editor",
     message: "Please paste your JSON data here:",
     validate: (val) => validateString(val),
   });
-
-  // const jsonContent = JSON.parse(answers.json_console_paste);
-  console.log(answers.json_console_paste);
+  const parsedFileContent = JSON.parse(answers.json_console_paste);
+  const interfaces = parseJsonToTs(parsedFileContent);
+  await printTsToFilePath(interfaces);
 }
 
 function parseJsonToTs(jsonContent: string) {
