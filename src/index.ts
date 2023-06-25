@@ -159,14 +159,15 @@ async function printTsToNewFile(interfaces: string[]) {
   const chosenFilename = await inquirer.prompt({
     name: "json_file_name",
     type: "input",
-    message: "Please give the file a name?(optional)",
+    message: "Please give the file a name?(optional):",
     validate: async (val) => validateString(val),
   });
 
   let fileName: string = chosenFilename.json_file_name;
   if (fileName && fileName.endsWith(".ts")) {
-    fileName.replace(".ts", "");
+    fileName = fileName.replace(".ts", "");
   }
+
   await writeFile(
     `${process.cwd()}/${chosenPath.json_path}/${fileName ?? "types"}.ts`,
     interfaces.join("\n")
