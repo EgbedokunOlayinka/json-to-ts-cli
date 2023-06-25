@@ -88,7 +88,7 @@ async function getJsonFromFileSource() {
   const fileContent = await readFile(fileSrc, "utf-8");
   const parsedFileContent = JSON.parse(fileContent);
   const interfaces = parseJsonToTs(parsedFileContent);
-  await printTsToFilePath(interfaces);
+  await askForOutputSource(interfaces);
 }
 
 async function getJsonFromConsolePaste() {
@@ -100,7 +100,7 @@ async function getJsonFromConsolePaste() {
   });
   const parsedFileContent = JSON.parse(answers.json_console_paste);
   const interfaces = parseJsonToTs(parsedFileContent);
-  await printTsToFilePath(interfaces);
+  await askForOutputSource(interfaces);
 }
 
 function parseJsonToTs(jsonContent: string) {
@@ -109,6 +109,26 @@ function parseJsonToTs(jsonContent: string) {
     interfaces.push(typeInterface);
   });
   return interfaces;
+}
+
+async function askForOutputSource(interfaces: string[]) {
+  const answers = await inquirer.prompt({
+    name: "json_source",
+    type: "list",
+    message: "Do you want the result to be printed to a file or to the console?",
+    choices: [SOURCE_ENUM.FILE, SOURCE_ENUM.PASTE],
+  });
+
+  if (answers.json_source === SOURCE_ENUM.FILE) {
+    return printTsToFilePath(interfaces);
+  }
+  if (answers.json_source === SOURCE_ENUM.PASTE) {
+    return printTsToConsole(interfaces);
+  }
+}
+
+function printTsToConsole(interfaces: string[]) {
+  return log(chalk.green.bold(interfaces.join("\n")));
 }
 
 async function printTsToFilePath(interfaces: string[]) {
@@ -137,6 +157,7 @@ async function printTsToNewFile(interfaces: string[]) {
   });
 
   await writeFile(`${process.cwd()}/${chosenPath.json_path}/types.ts`, interfaces.join("\n"));
+  log(chalk.green.bold("File created successfully"));
 }
 
 async function printTsToExistingFile(interfaces: string[]) {
@@ -148,6 +169,7 @@ async function printTsToExistingFile(interfaces: string[]) {
   });
 
   await appendFile(`${process.cwd()}/${chosenPath.json_path}`, `\n${interfaces.join("\n")}`);
+  log(chalk.green.bold("Data conversion successful"));
 }
 
 console.clear();
