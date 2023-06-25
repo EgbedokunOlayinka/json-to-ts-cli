@@ -1,0 +1,5 @@
+{
+  "cats": [{ "name": "Kittin" }, { "name": "Mittin" }],
+  "favoriteNumber": 42,
+  "favoriteWord": "Hello"
+}

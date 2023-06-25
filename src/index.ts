@@ -16,11 +16,7 @@ enum SOURCE_ENUM {
 }
 
 const stripSlash = (value: string) => (value.startsWith("/") ? value.replace("/", "") : value);
-
-function isJSONFile(filePath) {
-  const ext = extname(filePath).toLowerCase();
-  return ext === ".json";
-}
+const isJSONFile = (filePath: string) => extname(filePath).toLowerCase() === ".json";
 
 function validateString(value: string) {
   if (typeof value === "number") value = `${value}`;
