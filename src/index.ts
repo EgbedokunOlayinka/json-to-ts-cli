@@ -156,7 +156,21 @@ async function printTsToNewFile(interfaces: string[]) {
     validate: async (val) => await validateFolderPath(val),
   });
 
-  await writeFile(`${process.cwd()}/${chosenPath.json_path}/types.ts`, interfaces.join("\n"));
+  const chosenFilename = await inquirer.prompt({
+    name: "json_file_name",
+    type: "input",
+    message: "Please give the file a name?(optional)",
+    validate: async (val) => validateString(val),
+  });
+
+  let fileName: string = chosenFilename.json_file_name;
+  if (fileName && fileName.endsWith(".ts")) {
+    fileName.replace(".ts", "");
+  }
+  await writeFile(
+    `${process.cwd()}/${chosenPath.json_path}/${fileName ?? "types"}.ts`,
+    interfaces.join("\n")
+  );
   log(chalk.green.bold("File created successfully"));
 }
 
