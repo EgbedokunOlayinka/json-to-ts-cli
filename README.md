@@ -25,3 +25,7 @@ This will spin up a command-line wizard that will take you through the simple co
 
 - This is an example of what the process looks like when you output the result to a file
   ![An example of the process](https://drive.google.com/uc?id=1WqRJBTibxwMPMxPUcuJO4bpvCmE7bXdz)
+
+## Credits
+
+[Marius Alch](https://github.com/MariusAlch/) for the great [json-to-ts](https://github.com/MariusAlch/json-to-ts) module.
