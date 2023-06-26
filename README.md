@@ -22,4 +22,8 @@ npx jtsc
 
 This will spin up a command-line wizard that will take you through the simple conversion process.
 
-![An example of the process](https://drive.google.com/uc?id=1AhLeZFTJ57o2wByopLh9KAudKzEw8B6D)
+- This is an example of what the process looks like when you output the result to the terminal
+  ![An example of the process](https://drive.google.com/uc?id=1AhLeZFTJ57o2wByopLh9KAudKzEw8B6D)
+
+- This is an example of what the process looks like when you output the result to a file
+  ![An example of the process](https://drive.google.com/uc?id=1WqRJBTibxwMPMxPUcuJO4bpvCmE7bXdz)
