@@ -1,5 +1,5 @@
 {
-  "name": "json-to-ts-cli",
+  "name": "@theewave/json-to-ts-cli",
   "version": "1.0.0",
   "description": "a package that converts json data to typescript interfaces",
   "main": "build/index.js",
@@ -24,9 +24,9 @@
   "author": "Egbedokun Olayinka",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EgbedokunOlayinka/json-to-ts/issues"
+    "url": "https://github.com/EgbedokunOlayinka/json-to-ts-cli/issues"
   },
-  "homepage": "https://github.com/EgbedokunOlayinka/json-to-ts#readme",
+  "homepage": "https://github.com/EgbedokunOlayinka/json-to-ts-cli#readme",
   "dependencies": {
     "chalk": "^5.2.0",
     "inquirer": "^9.2.7",
