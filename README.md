@@ -12,9 +12,7 @@ npm install @theewave/json-to-ts-cli
 
 ## Usage
 
-To use the package in your project, follow these steps:
-
-1. Initialize the package in your terminal everytime you want to convert JSON data to TS:
+To use the package in your project, enter this command in your terminal:
 
 ```shell
 npx jtsc
